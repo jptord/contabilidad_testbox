@@ -13,7 +13,6 @@ export class SumassaldosComponent implements OnInit {
 	modalRef?: BsModalRef;
   title = 'appwork';
   cuentas: any;
-  cuentas2: any;
   resultados: any;
   constructor(
     private reportesService: ReportesService,
@@ -43,9 +42,7 @@ export class SumassaldosComponent implements OnInit {
       this.resultados = tempCuentas[0];
       
       console.log('tempCuentas', tempCuentas);
-      this.cuentas = tempCuentas[0].subcuentas;
-      this.cuentas2 = tempCuentas[0].subcuentas;
-      
+      this.cuentas = tempCuentas[0].subcuentas;      
       console.log('cuentas', this.cuentas);
     });
   }
