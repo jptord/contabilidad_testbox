@@ -1,0 +1,38 @@
+
+
+<div style="height:600px; overflow-y: scroll;">
+    <table class=" w-100 tabla-sumas" style="font-size:11px">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Cuenta</th>
+                <th>Nombre de cuenta</th>
+                <th>Debe</th>
+                <th>Haber</th>
+            </tr>
+        </thead>
+
+        <ng-template ngFor let-comprobante [ngForOf]="comprobantes">
+            <tr >            
+                <td>{{comprobante.fecha}}</td>
+            </tr>
+            <tr *ngFor="let det of comprobante.detalleComprobantes" >
+                <td></td>
+                <td [ngStyle]="{'background-color':det.id == comprobante.rel.id?'#8e8':'#fff'}">{{det.cuenta.codigo}}</td>
+                <td [ngStyle]="{'background-color':det.id == comprobante.rel.id?'#8e8':'#fff'}">{{det.cuenta.nombre}}</td>
+                <td [ngStyle]="{'background-color':det.id == comprobante.rel.id?'#8e8':'#fff'}">{{det.debe}}</td>
+                <td [ngStyle]="{'background-color':det.id == comprobante.rel.id?'#8e8':'#fff'}">{{det.haber}}</td>
+            </tr>
+        </ng-template>
+        
+    </table>
+    
+</div>
+<table class=" w-100 tabla-sumas" style="font-size:12px">    
+    <tr>
+            <td [ngStyle]="{'padding-left':cuenta.nivel*15+'px'}">{{cuenta.codigo}}</td>
+            <td [ngStyle]="{'padding-left':cuenta.nivel*15+'px'}">{{cuenta.nombre}}</td>
+            <td [ngStyle]="{'padding-left':cuenta.nivel*15+'px'}">{{cuenta.saldos_deudor}}</td>
+            <td [ngStyle]="{'padding-left':cuenta.nivel*15+'px'}">{{cuenta.saldos_acreedor}}</td>
+    </tr>
+</table>

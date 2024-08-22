@@ -1,0 +1,126 @@
+<!-- <button class="btn btn-sm" (click)="sumaSaldos()">Cargar</button> -->
+<button class="btn btn-sm d-flex float-end" (click)="showAll(cuentas2)" *ngIf="resultados">Desplegar todo</button>
+<table class="w-100 tabla-sumas">
+  <thead>
+    <tr>
+      <th class="alinear-cen" colspan="2"></th>
+      <th class="alinear-cen" colspan="2">Saldos Iniciales</th>
+      <th class="alinear-cen" colspan="2">Movimientos</th>
+      <th class="alinear-cen" colspan="2">Sumas</th>
+      <th class="alinear-cen" colspan="2">Saldos</th>
+      <th class="alinear-cen" colspan="2">Balance</th>
+      <th class="alinear-cen" colspan="2">Resultados</th>
+      <th ></th>
+      <th></th>
+    </tr>
+    <tr>
+      <th class="alinear-cen">Código</th><th class="alinear-cen">Cuenta</th>
+      <th class="alinear-cen">Debe</th><th class="alinear-cen">Haber</th>
+      <th class="alinear-cen">Debe</th><th class="alinear-cen">Haber</th>
+      <th class="alinear-cen">Debe</th><th class="alinear-cen">Haber</th>
+      <th class="alinear-cen">Deudor</th><th class="alinear-cen">Acreedor</th>
+      <th class="alinear-cen">Act</th><th class="alinear-cen">Pas y Patr</th>
+      <th class="alinear-cen">Ingresos</th><th class="alinear-cen">Egresos</th>
+      <th></th>
+    </tr> 
+  </thead>
+  <tbody>
+    <ng-template ngFor let-cuenta [ngForOf]="cuentas">
+      <ng-container *ngTemplateOutlet="account;context:{cuenta:cuenta}"></ng-container> 
+    </ng-template>    
+    <ng-container *ngTemplateOutlet="result;context:{cuenta:resultados}"></ng-container> 
+  </tbody>
+
+  <ng-template #account let-cuenta="cuenta">
+      <tr [ngStyle]="{'display': cuenta.show?'table-row':'none', 'background-color':cuenta.nivel==1?'#dedede':lvl2color(cuenta.nivel), 'font-size':16-cuenta.nivel+'px'}" >
+        <td>{{cuenta.codigo}}</td>
+        <td [ngStyle]="{'padding-left':cuenta.nivel*15+'px'}">{{cuenta.nombre}}</td>
+        <td class="alinear-der">{{cuenta.iniciales_debe}}</td>
+        <td class="alinear-der">{{cuenta.iniciales_haber}}</td>
+        <td class="alinear-der">{{cuenta.movimientos_debe}}</td>
+        <td class="alinear-der">{{cuenta.movimientos_haber}}</td>
+        <td class="alinear-der">{{cuenta.sumas_debe}}</td>
+        <td class="alinear-der">{{cuenta.sumas_haber}}</td>
+        <td class="alinear-der">{{cuenta.saldos_deudor}}</td>
+        <td class="alinear-der">{{cuenta.saldos_acreedor}}</td>
+        <td class="alinear-der">{{cuenta.balance_act}}</td>
+        <td class="alinear-der">{{cuenta.balance_patpas}}</td>
+        <td class="alinear-der">{{cuenta.resultados_ingreso}}</td>
+        <td class="alinear-der">{{cuenta.resultados_egreso}}</td>
+        <td><button class="btn btn-sm" (click)="showSub(cuenta)" *ngIf="cuenta.subcuentas.length>0">ver</button></td>
+        <td><button class="btn btn-sm" (click)="showComprobante(cuenta, modalComprobante)" *ngIf="cuenta.comprobantes.length>0">comprobantes</button></td>
+      </tr>      
+    <ng-template ngFor let-subcuenta [ngForOf]="cuenta.subcuentas">
+      <ng-container *ngTemplateOutlet="account;context:{cuenta:subcuenta}"></ng-container> 
+    </ng-template>
+  </ng-template>
+
+  <ng-template #result let-cuenta="cuenta">
+    <tr *ngIf="cuenta!=undefined">
+      <td class="alinear-der"></td>
+      <td class="alinear-der">TOTALES</td>
+      <td class="alinear-der">{{cuenta.iniciales_debe}}</td>
+      <td class="alinear-der">{{cuenta.iniciales_haber}}</td>
+      <td class="alinear-der">{{cuenta.movimientos_debe}}</td>
+      <td class="alinear-der">{{cuenta.movimientos_haber}}</td>
+      <td class="alinear-der">{{cuenta.sumas_debe}}</td>
+      <td class="alinear-der">{{cuenta.sumas_haber}}</td>
+      <td class="alinear-der">{{cuenta.saldos_deudor}}</td>
+      <td class="alinear-der">{{cuenta.saldos_acreedor}}</td>
+      <td class="alinear-der">{{cuenta.balance_act}}</td>
+      <td class="alinear-der">{{cuenta.balance_patpas}}</td>
+      <td class="alinear-der">{{cuenta.resultados_egreso}}</td>
+      <td class="alinear-der">{{cuenta.resultados_ingreso}}</td>
+      <td></td>
+    </tr>      
+    <tr *ngIf="cuenta!=undefined">
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">{{cuenta.resultado_balance_act}}</td>
+      <td class="alinear-der">{{cuenta.resultado_balance_patpas}}</td>
+      <td class="alinear-der">{{cuenta.resultado_egresos}}</td>
+      <td class="alinear-der">{{cuenta.resultado_ingresos}}</td>
+      <td></td>
+    </tr>      
+    <tr *ngIf="cuenta!=undefined">
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">{{cuenta.tot_balance_act}}</td>
+      <td class="alinear-der">{{cuenta.tot_balance_patpas}}</td>
+      <td class="alinear-der">-</td>
+      <td class="alinear-der">-</td>
+      <td></td>
+    </tr>      
+</ng-template>
+</table>
+
+<ng-template #modalComprobante role="document" let-modal class="center-modal">  
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Comprobantes</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-comprobantes (onClose)="modalRef?.hide()" [cuenta]="subcuenta"></app-comprobantes>
+  </div>		
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm rounded-full font-weight-light " (click)="modalRef?.hide()" >Cerrar</button>
+    </div>  
+</ng-template>

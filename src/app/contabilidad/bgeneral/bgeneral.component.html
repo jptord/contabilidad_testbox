@@ -1,0 +1,56 @@
+<!-- <button class="btn btn-sm" (click)="sumaSaldos()">Cargar</button> -->
+<button class="btn btn-sm d-flex float-end" (click)="showAll(cuentas2)" *ngIf="resultados">Desplegar todo</button>
+<table class="w-100 tabla-sumas">
+  <thead>
+    <tr>
+      <th class="alinear-cen">Código</th><th class="alinear-cen">Cuenta</th>
+      <th class="alinear-cen">Importe</th>
+      <th></th>
+      <th></th>
+    </tr> 
+  </thead>
+  <tbody>
+    <ng-template ngFor let-cuenta [ngForOf]="cuentas">
+      <ng-container *ngTemplateOutlet="account;context:{cuenta:cuenta}"></ng-container> 
+    </ng-template>    
+
+    <ng-container *ngTemplateOutlet="result;context:{cuenta:resultados}"></ng-container> 
+  </tbody>
+
+  <ng-template #account let-cuenta="cuenta">
+      <tr [ngStyle]="{'display': cuenta.show?'table-row':'none', 'background-color':cuenta.nivel==1?'#dedede':lvl2color(cuenta.nivel), 'font-size':16-cuenta.nivel+'px'}" >
+        <td>{{cuenta.codigo}}</td>
+        <td [ngStyle]="{'padding-left':cuenta.nivel*15+'px'}">{{cuenta.nombre}}</td>
+        <td class="alinear-der">{{cuenta.importe}}</td>
+        <td><button class="btn btn-sm" (click)="showSub(cuenta)" *ngIf="cuenta.subcuentas.length>0">ver</button></td>
+        <td><button class="btn btn-sm" (click)="showComprobante(cuenta, modalComprobante)" *ngIf="cuenta.comprobantes.length>0">comprobantes</button></td>
+      </tr>      
+    <ng-template ngFor let-subcuenta [ngForOf]="cuenta.subcuentas">
+      <ng-container *ngTemplateOutlet="account;context:{cuenta:subcuenta}"></ng-container> 
+    </ng-template>
+  </ng-template>
+
+  <ng-template #result let-cuenta="cuenta">
+    <tr *ngIf="cuenta!=undefined">
+      <td class="alinear-der"></td>
+      <td class="alinear-der">TOTAL PASIVO Y PATRIMONIO</td>
+      <td class="alinear-der">{{cuenta.tot_balance_patpas}}</td>
+      <td></td>
+    </tr>      
+</ng-template>
+</table>
+
+<ng-template #modalComprobante role="document" let-modal class="center-modal">  
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Comprobantes</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-comprobantes (onClose)="modalRef?.hide()" [cuenta]="subcuenta"></app-comprobantes>
+  </div>		
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm rounded-full font-weight-light " (click)="modalRef?.hide()" >Cerrar</button>
+    </div>  
+</ng-template>
