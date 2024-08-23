@@ -11,6 +11,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SumassaldosComponent } from './contabilidad/sumassaldos/sumassaldos.component';
 import { BgeneralComponent } from './contabilidad/bgeneral/bgeneral.component';
 import { BresultadosComponent } from './contabilidad/bresultados/bresultados.component';
+import { ReportviewerComponent } from './contabilidad/reportviewer/reportviewer.component';
+import { SafePipe } from './services/safe.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,6 +20,8 @@ import { BresultadosComponent } from './contabilidad/bresultados/bresultados.com
     SumassaldosComponent,
     BgeneralComponent,
     BresultadosComponent,
+    ReportviewerComponent,
+    SafePipe,
   ],
   imports: [
     BrowserModule,

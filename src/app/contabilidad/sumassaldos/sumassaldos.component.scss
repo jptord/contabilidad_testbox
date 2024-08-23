@@ -13,3 +13,15 @@
     border: 1px solid #ddd;
   }
   
+    .my-modal > .modal-lg {
+        width: 1308px;
+    }
+.mod-class {
+    max-width: 1000px;
+}
+
+.custom-window-class > .modal-dialog,
+.custom-window-class > .modal-dialog > .modal-content {
+   width: 80vw;
+   max-width: 80vw;
+}

@@ -1,5 +1,6 @@
 <!-- <button class="btn btn-sm" (click)="sumaSaldos()">Cargar</button> -->
 <button class="btn btn-sm d-flex float-end" (click)="showAll(cuentas)" *ngIf="resultados">Desplegar todo</button>
+<button class="btn btn-sm d-flex float-end" (click)="sumaSaldosExport()" *ngIf="resultados">Ver reporte</button>
 <table class="w-100 tabla-sumas">
   <thead>
     <tr>
@@ -69,8 +70,8 @@
       <td class="alinear-der">{{cuenta.saldos_acreedor}}</td>
       <td class="alinear-der">{{cuenta.balance_act}}</td>
       <td class="alinear-der">{{cuenta.balance_patpas}}</td>
-      <td class="alinear-der">{{cuenta.resultados_egreso}}</td>
       <td class="alinear-der">{{cuenta.resultados_ingreso}}</td>
+      <td class="alinear-der">{{cuenta.resultados_egreso}}</td>
       <td></td>
     </tr>      
     <tr *ngIf="cuenta!=undefined">
@@ -86,8 +87,8 @@
       <td class="alinear-der">-</td>
       <td class="alinear-der">{{cuenta.resultado_balance_act}}</td>
       <td class="alinear-der">{{cuenta.resultado_balance_patpas}}</td>
-      <td class="alinear-der">{{cuenta.resultado_egresos}}</td>
       <td class="alinear-der">{{cuenta.resultado_ingresos}}</td>
+      <td class="alinear-der">{{cuenta.resultado_egresos}}</td>
       <td></td>
     </tr>      
     <tr *ngIf="cuenta!=undefined">
@@ -122,5 +123,9 @@
   </div>		
   <div class="modal-footer">
     <button type="button" class="btn btn-sm rounded-full font-weight-light " (click)="modalRef?.hide()" >Cerrar</button>
-    </div>  
+  </div>
 </ng-template>
+
+<div *ngIf="base64">
+  <app-reportviewer [data]="base64" [type]="type" ></app-reportviewer>
+</div>
