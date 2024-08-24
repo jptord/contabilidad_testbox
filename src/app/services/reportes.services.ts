@@ -16,18 +16,26 @@ export class ReportesService {
      });
 	constructor(private http: HttpClient) { }
 
-
-	sumasaldos(id: string = '') {
+	centroDeCostos(){
+		return this.http.get(this.apiUrl + `/centro_costos`, { headers: this.reqHeader });
+	}	
+	grupos(){
+		return this.http.get(this.apiUrl + `/grupos`, { headers: this.reqHeader });
+	}
+	sumasaldos() {
 		return this.http.get(this.apiUrl + `/${this.apiName}/sumas_saldos`, { headers: this.reqHeader });
 	}
-	balancegeneral(id: string = '') {
+	sumasaldosFiltro(filtro:any) {
+		return this.http.post(this.apiUrl + `/${this.apiName}/sumas_saldos_filtro`,filtro, { headers: this.reqHeader });
+	}
+	balancegeneral() {
 		return this.http.get(this.apiUrl + `/${this.apiName}/balance_general`, { headers: this.reqHeader });
 	}
-	balanceresultados(id: string = '') {
+	balanceresultados() {
 		return this.http.get(this.apiUrl + `/${this.apiName}/balance_resultados`, { headers: this.reqHeader });
 	}
 	/* exportaciones */
-	sumasaldosExport(id: string = '') {
+	sumasaldosExport() {
 		return this.http.get(this.apiUrl + `/${this.apiName}/sumas_saldos_exportar`, { headers: this.reqHeader });
 	}
 

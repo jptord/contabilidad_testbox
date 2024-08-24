@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReportesService } from '../../services/reportes.services';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
+import { DatePipe } from '@angular/common';
 function generateUUID() { // Public Domain/MIT
   var d = new Date().getTime();//Timestamp
   var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
@@ -25,21 +26,37 @@ function generateUUID() { // Public Domain/MIT
   styleUrl: './sumassaldos.component.scss'
 })
 export class SumassaldosComponent implements OnInit {
-
-	modalRef?: BsModalRef;
+	get formattedDate() {
+		return this.datePipe.transform(this.filtroDateTo, 'dd-MM-yyyy');
+	}
+  modalRef?: BsModalRef;
   title = 'appwork';
   cuentas: any;
   resultados: any;
   base64:any=null;
   type:any=null;
+
+  /* filtros */
+  centroDeCostos:any;
+  grupos:any;
+  filtroDateTo: any;  
+  filtroCentroDeCostos: any;
+  filtroGrupos: any;
+
   constructor(
     private reportesService: ReportesService,
     private modalService: BsModalService,
+	private datePipe: DatePipe
   ) {}
   ngOnInit(): void {
+	this.cargar();
     this.sumaSaldos();
   }
 
+  cargar(){
+	this.reportesService.centroDeCostos().subscribe((result:any) => this.centroDeCostos = result.content );
+	this.reportesService.grupos().subscribe((result:any) => this.grupos = result.content );
+  }
   sumaSaldosExport() {
     this.reportesService.sumasaldosExport().subscribe((r: any) => {
       this.base64 = r.data.content;
@@ -65,6 +82,41 @@ export class SumassaldosComponent implements OnInit {
       });
       this.resultados = tempCuentas[0];
       this.toJasper(this.resultados);
+      
+      console.log('tempCuentas', tempCuentas);
+      this.cuentas = tempCuentas[0].subcuentas;      
+      console.log('cuentas', this.cuentas);
+    });
+  }
+  sumaSaldosFiltro() {
+    console.log('loading filter');
+	console.log("this.dateTo",this.filtroDateTo);
+	console.log("this.filtroCentroDeCostos",this.filtroCentroDeCostos);
+	let filtro = {
+		fecha: {
+			to : this.filtroDateTo
+		},
+		centroCostos : this.filtroCentroDeCostos,
+		grupos : this.filtroGrupos
+	}
+    this.reportesService.sumasaldosFiltro(filtro).subscribe((r: any) => {      
+      let tempCuentas = r.content;
+      this.resultados = null;
+	  this.cuentas = null;
+      tempCuentas[0].subcuentas = tempCuentas[0].subcuentas.sort( (a:any,b:any) =>{
+        if (a.codigo > b.codigo) return 1;
+        if (a.codigo < b.codigo) return -1;
+        return 0;
+      });
+      tempCuentas.forEach((c:any)=> {
+        c['show'] = true;
+        c['toggled'] = false;
+        
+        c.subcuentas.forEach( (subcuenta:any)=>
+          this.setControls(subcuenta)
+        );    
+      });
+      this.resultados = tempCuentas[0];
       
       console.log('tempCuentas', tempCuentas);
       this.cuentas = tempCuentas[0].subcuentas;      

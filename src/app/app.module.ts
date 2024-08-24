@@ -3,6 +3,7 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DatePipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { ComprobantesComponent } from './contabilidad/comprobantes/comprobantes.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -34,6 +35,7 @@ import { SafePipe } from './services/safe.pipe';
     provideClientHydration(),
     BsModalRef, 
     BsModalService ,
+	DatePipe,
   ],
   bootstrap: [AppComponent]
 })
