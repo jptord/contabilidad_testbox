@@ -23,20 +23,31 @@ export class ReportesService {
 		return this.http.get(this.apiUrl + `/grupos`, { headers: this.reqHeader });
 	}
 	sumasaldos() {
-		return this.http.get(this.apiUrl + `/${this.apiName}/sumas_saldos`, { headers: this.reqHeader });
+		return this.http.post(this.apiUrl + `/${this.apiName}/sumas_saldos`,{}, { headers: this.reqHeader });
 	}
-	sumasaldosFiltro(filtro:any) {
-		return this.http.post(this.apiUrl + `/${this.apiName}/sumas_saldos_filtro`,filtro, { headers: this.reqHeader });
+	sumasaldosFiltro(filtro:any={}) {
+		return this.http.post(this.apiUrl + `/${this.apiName}/sumas_saldos`,filtro, { headers: this.reqHeader });
 	}
 	balancegeneral() {
-		return this.http.get(this.apiUrl + `/${this.apiName}/balance_general`, { headers: this.reqHeader });
+		return this.http.post(this.apiUrl + `/${this.apiName}/balance_general`,{}, { headers: this.reqHeader });
+	}
+	balancegeneralFiltro(filtro:any={}) {
+		return this.http.post(this.apiUrl + `/${this.apiName}/balance_general`,filtro, { headers: this.reqHeader });
 	}
 	balanceresultados() {
-		return this.http.get(this.apiUrl + `/${this.apiName}/balance_resultados`, { headers: this.reqHeader });
+		return this.http.post(this.apiUrl + `/${this.apiName}/balance_resultados`,{}, { headers: this.reqHeader });
+	}
+	balanceresultadosFiltro(filtro:any={}) {
+		return this.http.post(this.apiUrl + `/${this.apiName}/balance_resultados`,filtro, { headers: this.reqHeader });
 	}
 	/* exportaciones */
-	sumasaldosExport() {
-		return this.http.get(this.apiUrl + `/${this.apiName}/sumas_saldos_exportar`, { headers: this.reqHeader });
+	sumasaldosExport(filtro:any={}) {
+		return this.http.post(this.apiUrl + `/${this.apiName}/sumas_saldos_exportar`, filtro,{ headers: this.reqHeader });
 	}
-
+	balancegeneralExport(filtro:any={}) {
+		return this.http.post(this.apiUrl + `/${this.apiName}/balance_general_exportar`,filtro, { headers: this.reqHeader });
+	}
+	balanceresultadosExport(filtro:any={}) {
+		return this.http.post(this.apiUrl + `/${this.apiName}/balance_resultados_exportar`,filtro, { headers: this.reqHeader });
+	}
 }

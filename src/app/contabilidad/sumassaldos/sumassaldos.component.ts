@@ -42,6 +42,8 @@ export class SumassaldosComponent implements OnInit {
   filtroDateTo: any;  
   filtroCentroDeCostos: any;
   filtroGrupos: any;
+  filtroRegistro: any;
+  filtroMovimientos: any;
 
   constructor(
     private reportesService: ReportesService,
@@ -57,10 +59,63 @@ export class SumassaldosComponent implements OnInit {
 	this.reportesService.centroDeCostos().subscribe((result:any) => this.centroDeCostos = result.content );
 	this.reportesService.grupos().subscribe((result:any) => this.grupos = result.content );
   }
-  sumaSaldosExport() {
-    this.reportesService.sumasaldosExport().subscribe((r: any) => {
+  exportar(report:any) {	
+    let filtro = {
+		fecha: {
+			to : this.filtroDateTo
+		},
+		centroCostos : this.filtroCentroDeCostos,
+		grupos : this.filtroGrupos,
+		registro: {
+			value:  this.filtroRegistro
+		},
+		movimientos: {
+			value:  this.filtroMovimientos
+		}
+	};
+	this.reportesService.sumasaldosExport(filtro).subscribe((r: any) => {
       this.base64 = r.data.content;
       this.type = 'pdf';
+	  report.open(this.base64);
+    });
+  }
+  filtrar() {
+	let filtro = {
+		fecha: {
+			to : this.filtroDateTo
+		},
+		centroCostos : this.filtroCentroDeCostos,
+		grupos : this.filtroGrupos,
+		registro: {
+			value:  this.filtroRegistro
+		},
+		movimientos: {
+			value:  this.filtroMovimientos
+		}
+	};
+	console.log(filtro);
+    this.reportesService.sumasaldosFiltro(filtro).subscribe((r: any) => {      
+      let tempCuentas = r.content;
+      this.resultados = null;
+	  this.cuentas = null;
+      tempCuentas[0].subcuentas = tempCuentas[0].subcuentas.sort( (a:any,b:any) =>{
+        if (a.codigo > b.codigo) return 1;
+        if (a.codigo < b.codigo) return -1;
+        return 0;
+      });
+      tempCuentas.forEach((c:any)=> {
+        c['show'] = true;
+        c['toggled'] = false;
+        
+        c.subcuentas.forEach( (subcuenta:any)=>
+          this.setControls(subcuenta)
+        );    
+      });
+      this.resultados = tempCuentas[0];
+      
+      console.log('tempCuentas', tempCuentas);
+      this.cuentas = tempCuentas[0].subcuentas;      
+      console.log('cuentas', this.cuentas);
     });
   }
   sumaSaldos() {
@@ -82,41 +137,6 @@ export class SumassaldosComponent implements OnInit {
       });
       this.resultados = tempCuentas[0];
       this.toJasper(this.resultados);
-      
-      console.log('tempCuentas', tempCuentas);
-      this.cuentas = tempCuentas[0].subcuentas;      
-      console.log('cuentas', this.cuentas);
-    });
-  }
-  sumaSaldosFiltro() {
-    console.log('loading filter');
-	console.log("this.dateTo",this.filtroDateTo);
-	console.log("this.filtroCentroDeCostos",this.filtroCentroDeCostos);
-	let filtro = {
-		fecha: {
-			to : this.filtroDateTo
-		},
-		centroCostos : this.filtroCentroDeCostos,
-		grupos : this.filtroGrupos
-	}
-    this.reportesService.sumasaldosFiltro(filtro).subscribe((r: any) => {      
-      let tempCuentas = r.content;
-      this.resultados = null;
-	  this.cuentas = null;
-      tempCuentas[0].subcuentas = tempCuentas[0].subcuentas.sort( (a:any,b:any) =>{
-        if (a.codigo > b.codigo) return 1;
-        if (a.codigo < b.codigo) return -1;
-        return 0;
-      });
-      tempCuentas.forEach((c:any)=> {
-        c['show'] = true;
-        c['toggled'] = false;
-        
-        c.subcuentas.forEach( (subcuenta:any)=>
-          this.setControls(subcuenta)
-        );    
-      });
-      this.resultados = tempCuentas[0];
       
       console.log('tempCuentas', tempCuentas);
       this.cuentas = tempCuentas[0].subcuentas;      

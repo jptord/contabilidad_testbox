@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ReportesService } from '../../services/reportes.services';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -10,19 +11,92 @@ import { ReportesService } from '../../services/reportes.services';
 })
 export class BresultadosComponent implements OnInit {
 
-	modalRef?: BsModalRef;
+  modalRef?: BsModalRef;
   title = 'appwork';
   cuentas: any;
   cuentas2: any;
   resultados: any;
+  base64:any=null;
+  type:any=null;
+
+  /* filtros */
+  centroDeCostos:any;
+  grupos:any;
+  filtroDateTo: any;  
+  filtroCentroDeCostos: any;
+  filtroGrupos: any;
+  filtroRegistro: any;
+  filtroMovimientos: any;
+
   constructor(
     private reportesService: ReportesService,
     private modalService: BsModalService,
+	private datePipe: DatePipe
   ) {}
   ngOnInit(): void {
+	this.cargar();
     this.bgeneral();
   }
-
+  cargar(){
+	this.reportesService.centroDeCostos().subscribe((result:any) => this.centroDeCostos = result.content );
+	this.reportesService.grupos().subscribe((result:any) => this.grupos = result.content );
+  }
+  exportar(report:any) {	
+    let filtro = {
+		fecha: {
+			to : this.filtroDateTo
+		},
+		centroCostos : this.filtroCentroDeCostos,
+		grupos : this.filtroGrupos,
+		registro: {
+			value:  this.filtroRegistro
+		},
+		movimientos: {
+			value:  this.filtroMovimientos
+		}
+	};
+	this.reportesService.balanceresultadosExport(filtro).subscribe((r: any) => {
+      this.base64 = r.data.content;
+      this.type = 'pdf';
+	  report.open(this.base64);
+    });
+  }
+  filtrar() {
+	let filtro = {
+		fecha: {
+			to : this.filtroDateTo
+		},
+		centroCostos : this.filtroCentroDeCostos,
+		grupos : this.filtroGrupos,
+		registro: {
+			value:  this.filtroRegistro
+		},
+		movimientos: {
+			value:  this.filtroMovimientos
+		}
+	};
+	console.log(filtro);
+    this.reportesService.balanceresultadosFiltro(filtro).subscribe((r: any) => {      
+      let tempCuentas = r.content;
+      this.resultados = null;
+	  this.cuentas = null;
+      tempCuentas[0].subcuentas = tempCuentas[0].subcuentas.sort( (a:any,b:any) =>{
+        if (a.codigo > b.codigo) return 1;
+        if (a.codigo < b.codigo) return -1;
+        return 0;
+      });
+      tempCuentas.forEach((c:any)=> {
+        c['show'] = true;
+        c['toggled'] = false;
+        
+        c.subcuentas.forEach( (subcuenta:any)=>
+          this.setControls(subcuenta)
+        );    
+      });
+      this.resultados = tempCuentas[0];
+      this.cuentas = tempCuentas[0].subcuentas;      
+    });
+  }
   bgeneral() {
     console.log('loading');
     this.reportesService.balanceresultados().subscribe((r: any) => {      
