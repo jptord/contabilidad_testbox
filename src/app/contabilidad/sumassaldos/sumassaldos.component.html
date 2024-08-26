@@ -1,34 +1,45 @@
 <!-- <button class="btn btn-sm" (click)="sumaSaldos()">Cargar</button> -->
 <button class="btn btn-sm d-flex float-end" (click)="showAll(cuentas)" *ngIf="resultados">Desplegar todo</button>
 <button class="btn btn-sm d-flex float-end" (click)="exportar(report)" *ngIf="resultados">Ver reporte</button>
-<div class="border d-flex justify-content-end card col-6">
-  <div>
-    <label for="fecha"><small>Fecha Hasta</small></label>
-    <input type="date" id="fecha" [ngModel]="filtroDateTo" (ngModelChange)="filtroDateTo=$event" class="sm-form-control">
-    <button class="btn btn-sm d-flex float-end" (click)="filtrar()" *ngIf="resultados">Filtrar</button>
+<div class="border row col-12 ">
+  <div class="col-12">
+    <button class="btn btn-sm btn-secondary d-flex float-end" (click)="filtrar()" *ngIf="resultados">Filtrar</button>
+    <button class="btn btn-sm btn-secondary d-flex float-end" (click)="limpiar()" *ngIf="resultados">limpiar</button>
+  </div>
+  <div class="col-3 row">
+    <div class="col-12">
+      <label for="fecha"><small>Fecha Desde</small></label>
+      <input type="date" id="fechadesde" [ngModel]="filtroDateFrom" (ngModelChange)="filtroDateFrom=$event" class="sm-form-control">
+    </div>
+    <div class="col-12">
+      <label for="fecha"><small>Fecha Hasta</small></label>
+      <input type="date" id="fecha" [ngModel]="filtroDateTo" (ngModelChange)="filtroDateTo=$event" class="sm-form-control">
+    </div>
   </div>
 
-  <div>
+  <div class="col-3">
     <label for="centrocosto"><small>Centro de Costos</small></label>
     <select class="form-select" id="centrocosto" [(ngModel)]="filtroCentroDeCostos" multiple>
       <!-- <option selected value=""  > Todos</option> -->
       <option *ngFor="let centro of centroDeCostos" value="{{centro.id}}">{{centro.nombre}}</option>
     </select>  
   </div>
-  <div>
+  <div class="col-3">
     <label for="grupos"><small>Grupos</small></label>
     <select class="form-select" id="grupos" [(ngModel)]="filtroGrupos" multiple>
       <!-- <option selected value=""  > Todos</option> -->
       <option *ngFor="let grupo of grupos" value="{{grupo.id}}">{{grupo.nombre}}</option>
     </select>  
   </div>
-  <div>
-    <label for="registros"><small>Solo cuentas de registro</small></label>    
-    <input type="checkbox" id="registros" [ngModel]="filtroRegistro" (ngModelChange)="filtroRegistro=$event" class="sm-form-control">
-  </div>
-  <div>
-    <label for="movimientos"><small>Solo cuentas con movimientos</small></label>    
-    <input type="checkbox" id="movimientos" [ngModel]="filtroMovimientos" (ngModelChange)="filtroMovimientos=$event" class="sm-form-control">
+  <div class="col-3">
+    <div>
+      <label for="registros"><small>Solo cuentas de registro</small></label>    
+      <input type="checkbox" id="registros" [ngModel]="filtroRegistro" (ngModelChange)="filtroRegistro=$event" class="sm-form-control">
+    </div>
+    <div>
+      <label for="movimientos"><small>Solo cuentas con movimientos</small></label>    
+      <input type="checkbox" id="movimientos" [ngModel]="filtroMovimientos" (ngModelChange)="filtroMovimientos=$event" class="sm-form-control">
+    </div>
   </div>
 </div>
 <table class="w-100 tabla-sumas">

@@ -13,7 +13,6 @@ export class BgeneralComponent implements OnInit {
 	modalRef?: BsModalRef;
   title = 'appwork';
   cuentas: any;
-  cuentas2: any;
   resultados: any;
   base64:any=null;
   type:any=null;
@@ -21,6 +20,7 @@ export class BgeneralComponent implements OnInit {
   /* filtros */
   centroDeCostos:any;
   grupos:any;
+  filtroDateFrom: any;  
   filtroDateTo: any;  
   filtroCentroDeCostos: any;
   filtroGrupos: any;
@@ -43,6 +43,7 @@ export class BgeneralComponent implements OnInit {
   exportar(report:any) {	
     let filtro = {
 		fecha: {
+			from: this.filtroDateFrom,
 			to : this.filtroDateTo
 		},
 		centroCostos : this.filtroCentroDeCostos,
@@ -60,9 +61,18 @@ export class BgeneralComponent implements OnInit {
 	  report.open(this.base64);
     });
   }
+  limpiar() {	
+	this.filtroDateFrom=null;
+	this.filtroDateTo=null;
+	this.filtroCentroDeCostos=null;
+	this.filtroGrupos=null;
+	this.filtroRegistro=null;
+	this.filtroMovimientos=null;
+  }
   filtrar() {
 	let filtro = {
 		fecha: {
+			from: this.filtroDateFrom,
 			to : this.filtroDateTo
 		},
 		centroCostos : this.filtroCentroDeCostos,
@@ -121,7 +131,6 @@ export class BgeneralComponent implements OnInit {
       
       console.log('tempCuentas', tempCuentas);
       this.cuentas = tempCuentas[0].subcuentas;
-      this.cuentas2 = tempCuentas[0].subcuentas;
       
       console.log('cuentas', this.cuentas);
     });

@@ -1,6 +1,6 @@
 
-<button class="btn btn-sm" routerLink="/sumasaldos">Suma y saldos</button>
-<button class="btn btn-sm" routerLink="/bgeneral">Balance General</button>
-<button class="btn btn-sm" routerLink="/bresultados">Balance Resultados</button>
+<button class="btn btn-sm" [ngClass]="{'btn-primary':selected==1}" routerLink="/sumasaldos" (click)="selected=1">Suma y saldos</button>
+<button class="btn btn-sm" [ngClass]="{'btn-primary':selected==2}" routerLink="/bgeneral" (click)="selected=2">Balance General</button>
+<button class="btn btn-sm" [ngClass]="{'btn-primary':selected==3}" routerLink="/bresultados" (click)="selected=3">Balance Resultados</button>
 
 <router-outlet></router-outlet>

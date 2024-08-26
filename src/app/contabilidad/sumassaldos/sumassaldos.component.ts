@@ -39,6 +39,7 @@ export class SumassaldosComponent implements OnInit {
   /* filtros */
   centroDeCostos:any;
   grupos:any;
+  filtroDateFrom: any;  
   filtroDateTo: any;  
   filtroCentroDeCostos: any;
   filtroGrupos: any;
@@ -62,6 +63,7 @@ export class SumassaldosComponent implements OnInit {
   exportar(report:any) {	
     let filtro = {
 		fecha: {
+			from: this.filtroDateFrom,
 			to : this.filtroDateTo
 		},
 		centroCostos : this.filtroCentroDeCostos,
@@ -79,9 +81,18 @@ export class SumassaldosComponent implements OnInit {
 	  report.open(this.base64);
     });
   }
+  limpiar() {	
+	this.filtroDateFrom=null;
+	this.filtroDateTo=null;
+	this.filtroCentroDeCostos=null;
+	this.filtroGrupos=null;
+	this.filtroRegistro=null;
+	this.filtroMovimientos=null;
+  }
   filtrar() {
 	let filtro = {
 		fecha: {
+			from: this.filtroDateFrom,
 			to : this.filtroDateTo
 		},
 		centroCostos : this.filtroCentroDeCostos,
